@@ -34,7 +34,7 @@ class InitHandler():
         context.user_data.clear()
         return ConversationHandler.END
 
-    def check_valid_user(self, user_id:int) -> bool:
+    def check_valid_user(self, user_id:int) -> int:
         wks = self.sh.worksheet('title','password')
         df = wks.get_as_df()
 

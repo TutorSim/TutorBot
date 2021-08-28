@@ -78,6 +78,9 @@ class RegisterHandler():
         if self.check_pasword(context.user_data['row'], update.message.text):
             wks = self.sh.worksheet('title','password')
             wks.update_value('E'+str(context.user_data['row']), update.effective_user.id)
+            wks = self.sh.worksheet('title','access_records')
+            wks.update_value('B'+str(context.user_data['row']), update.effective_user.id)
+
             update.message.reply_text("챗봇 서비스에 등록되었습니다.")
         else:
             update.message.reply_text("비밀번호가 맞지 않습니다. \n다시 시작하길 바랍니다.")

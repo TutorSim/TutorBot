@@ -6,8 +6,9 @@ import pygsheets
 from init_handler import InitHandler
 from register_handler import RegisterHandler
 from info_handler import InfoHandler
+from score_handler import ScoreHandler
 
-from config import TELEGRAM_API_KEY, GOOGLE_SERVICE_KEY, GOOGLE_SPREAD_SHEET, Info
+from config import TELEGRAM_API_KEY, GOOGLE_SERVICE_KEY, GOOGLE_SPREAD_SHEET, CourseInfo
 from definitions import STATES
 
 import logging
@@ -26,12 +27,17 @@ class TutorBot():
         # Related to python-telegram-bot
         self.updater = Updater(telegram_key)
         dp = self.updater.dispatcher
+
         # Internal usages
         self.state_map = {state:idx for idx, state in enumerate(telegram_states)}
-        self.handlers = [InitHandler(self.state_map, self.sh),
+        self.handlers = [
+                         InitHandler(self.state_map, self.sh),
                          RegisterHandler(self.state_map, self.sh),
-                         InfoHandler(Info())]
+                         InfoHandler(CourseInfo()),]
 
+        for content in CourseInfo.SCORE_CONTENTS:
+            self.handlers.append(ScoreHandler(self.state_map, self.sh, content))
+        
         for handler in self.handlers:
             dp.add_handler(handler.get_handler())
         
