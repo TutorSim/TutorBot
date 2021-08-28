@@ -28,6 +28,9 @@ class InitHandler():
 
     def get_handler(self) -> Dispatcher:
         return self.handler
+    
+    def get_help(self):
+        return f"/init: 다른 사람은 개인 점수를 확인하지 않도록 자기만의 암호를 등록합니다. 평소 사용하지 않는 암호를 사용하기 바랍니다."
 
     def cancel(self, update: Update, context: CallbackContext) -> int:
         """Display the gathered info and end the conversation."""
@@ -46,7 +49,8 @@ class InitHandler():
 
     def check_register_user(self, idx:int) -> bool:
         wks = self.sh.worksheet('title','password')
-        if wks.get_value('E'+str(idx)) != 0:
+        #print(type(wks.get_value('E'+str(idx))))
+        if int(wks.get_value('E'+str(idx))) != 0:
             return True
         else:
             return False

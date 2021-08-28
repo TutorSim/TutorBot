@@ -41,12 +41,21 @@ class TutorBot():
         for handler in self.handlers:
             dp.add_handler(handler.get_handler())
         
+        dp.add_handler(CommandHandler('start', self.start))
+
         pass
 
     def start(self, update: Update, context: CallbackContext) -> None:
         """Send a message when the command /start is issued."""
-        user = update.effective_user
-        print(user)
+        context.user_data.clear()
+
+        resp = ""
+        for handler in self.handlers:
+            resp += handler.get_help()
+            resp += "\n"
+
+        update.message.reply_text(resp)    
+        
 
     def execute(self):
         self.updater.start_polling()

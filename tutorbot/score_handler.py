@@ -22,9 +22,13 @@ class ScoreHandler():
     def get_handler(self) -> Dispatcher:
         return self.handler
 
+    def get_help(self):
+        return f"/{self.sheet_name}: {self.sheet_name} 점수를 확인합니다."
+
     def cancel(self, update: Update, context: CallbackContext) -> int:
         """Display the gathered info and end the conversation."""
         context.user_data.clear()
+        update.message.reply_text("취소 되었습니다.")
         return ConversationHandler.END
     
     def check_registered_user(self, _id:int) -> int:
@@ -51,6 +55,7 @@ class ScoreHandler():
         df = wks.get_as_df()
         score = df.loc[context.user_data['gs_user_row'],'Total']
         update.message.reply_text(f"당신의 {self.sheet_name}의 점수는 {score}입니다.")
+        context.user_data.clear()
         return ConversationHandler.END
 
     def detail(self, update: Update, context: CallbackContext) -> int:
@@ -66,6 +71,6 @@ class ScoreHandler():
                 continue
             response += f"{col}: {values[idx]}\n"
             
-        
         update.message.reply_text(f"당신의 구체적인 {self.sheet_name}의 점수는 다음과 같습니다.\n{response}")
+        context.user_data.clear()
         return ConversationHandler.END

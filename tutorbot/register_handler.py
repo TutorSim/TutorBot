@@ -29,9 +29,13 @@ class RegisterHandler():
     def get_handler(self) -> Dispatcher:
         return self.handler
     
+    def get_help(self):
+        return f"/register: Tutor봇으로 사용자 등록을 합니다. 다른 사람은 개인 점수를 확인하지 않도록 변경한 암호를 확인합니다."
+
     def cancel(self, update: Update, context: CallbackContext) -> int:
         """Display the gathered info and end the conversation."""
         context.user_data.clear()
+        update.message.reply_text("취소 되었습니다.")
         return ConversationHandler.END
 
     def handle_unwanted_data(self, update: Update, context: CallbackContext) -> int:
