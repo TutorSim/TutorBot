@@ -2,11 +2,12 @@ from telegram import Update
 from telegram.ext import  Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackContext
 
 import pygsheets
-import pandas as pd
 
 from init_handler import InitHandler
+from register_handler import RegisterHandler
+from info_handler import InfoHandler
 
-from config import TELEGRAM_API_KEY, GOOGLE_SERVICE_KEY, GOOGLE_SPREAD_SHEET
+from config import TELEGRAM_API_KEY, GOOGLE_SERVICE_KEY, GOOGLE_SPREAD_SHEET, Info
 from definitions import STATES
 
 import logging
@@ -24,13 +25,16 @@ class TutorBot():
         
         # Related to python-telegram-bot
         self.updater = Updater(telegram_key)
-
+        dp = self.updater.dispatcher
         # Internal usages
         self.state_map = {state:idx for idx, state in enumerate(telegram_states)}
-        self.handlers = [InitHandler(self.state_map, self.sh, self.updater.dispatcher)]
+        self.handlers = [InitHandler(self.state_map, self.sh),
+                         RegisterHandler(self.state_map, self.sh),
+                         InfoHandler(Info())]
 
+        for handler in self.handlers:
+            dp.add_handler(handler.get_handler())
         
-        #dp.add_handler(CommandHandler("help", self.start))
         pass
 
     def start(self, update: Update, context: CallbackContext) -> None:
